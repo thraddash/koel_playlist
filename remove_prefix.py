@@ -32,15 +32,21 @@ def menu():
 
   for dir_name in selected_entries:
     for file in os.listdir(dir_name):
-      if (file.startswith(dir_name) and (file.endswith(".mp3") or file.endswith(".m4a"))):
-        print("[remove prefix] ==> " + file)
-        prefix_removed = file[len(dir_name)+1:]
-        os.rename( curr_path + '/' + dir_name + '/' + file, curr_path + '/' + dir_name + '/' + prefix_removed)
-      elif (not file.startswith(dir_name) and (file.endswith(".mp3") or file.endswith(".m4a"))):
-        print("[Skippped foldername prefix not found!] ==> " + file)
-      elif (not file.startswith(dir_name) and (not file.endswith(".mp3") or not file.endswith(".m4a"))):
-        #print("[Skipped] " + "Directory => " + dir_name + " ==> " + file)
-        continue 
+       if (file.endswith(".mp3") or file.endswith(".m4a")):
+        #replace space with underscore, add underscore in front and back of dir_name
+        name = file.rsplit(('.'), 1)
+        dir_underscore = dir_name.replace(" ","_")
+        dir_underscore = ''.join(('_',dir_underscore, '_'))
+
+        #print(dir_underscore, name[0], name[1])
+        #check if name.endswith dir_underscore
+        if dir_underscore in name[0]:
+          len_dir_name = len(dir_name)+3
+          fix_name = name[0][:-len_dir_name] # remove foldername end of file
+          #print(fix_name + "." + name[1])
+          os.rename( curr_path + '/' + dir_name + '/' + file, curr_path + '/' + dir_name + '/' + fix_name + "." + name[1])
+        else:
+          print("[Skipped no changes needed] " + name[0])
 
 if __name__ == "__main__":
   menu()
